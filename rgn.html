@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<HTML>
+
+<!--
+Rede Geodésica Nacional
+
+0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
+-->
+
+
+<HEAD>	
+<TITLE>Linguagens e Ambientes de Programação (2020/2021) [Eng.Inf. - DI/FCT/UNL] - 3º projeto prático (Javascript)</TITLE>
+<META charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" 
+	integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" 
+	crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" 
+	integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" 
+	crossorigin=""></script>
+    <link rel="stylesheet" 
+	href="https://leaflet.github.io/Leaflet.markercluster/dist/MarkerCluster.css" />
+    <link rel="stylesheet" 
+	href="https://leaflet.github.io/Leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <script src="https://leaflet.github.io/Leaflet.markercluster/dist/leaflet.markercluster-src.js"></script>
+
+<SCRIPT TYPE="text/javascript" SRC="rgn.js"></SCRIPT>
+<STYLE>
+html, body { font-size:12px; height: 100%;  width: 100%; padding: 0; margin: 0;}
+input { padding: 0; margin: 0;}
+</STYLE>
+</HEAD>
+
+
+
+
+
+
+
+<BODY ONLOAD="onLoad()">
+
+<DIV STYLE="position: fixed; top: 0px; left: 0px; height: 100%; width: 200px; background: rgb(188, 188, 188)">
+<H2>Rede Geodésica Nacional</H2>
+
+<hr><b>Autores:</b> <br />
+&nbsp;&nbsp;&nbsp;&nbsp;   57728 Pedro Silva <br />
+&nbsp;&nbsp;&nbsp;&nbsp;   58315 Gonçalo Carvalho <br />
+
+<div style="font-family:verdana">
+	<hr>
+	<b>Controlo:</b>
+	<br />
+	<br />&nbsp;&nbsp;&nbsp;&nbsp;
+		<img src="resources/order1.png" alt="order1" />
+		<input type="checkbox" id="order1" checked onchange="checkboxUpdate(this)"/>
+		<img src="resources/order2.png" alt="order2" />	
+		<input type="checkbox" id="order2" checked onchange="checkboxUpdate(this)"/>
+		<img src="resources/order3.png" alt="order3" />	
+		<input type="checkbox" id="order3" checked onchange="checkboxUpdate(this)"/>
+		<img src="resources/order4.png" alt="order4" />	
+		<input type="checkbox" id="order4" checked onchange="checkboxUpdate(this)"/>
+	<br />
+	<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<INPUT type="button" id="heightCircles" value="Mostrar alturas" onClick="addCirclesCluster()">
+</div>
+
+<br />
+<br />
+
+<div style="font-family:verdana">
+	<hr><b>Estatísticas VG's:</b>
+
+	<br />
+	<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		Total visíveis:
+	<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	 	<span id='visible_caches'>0</span>
+	<br />
+	<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<img src="resources/order1.png" alt="order1" /> visíveis  
+	<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<span id='visible_order1'>0</span>
+		<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<img src="resources/order2.png" alt="order2" />	visíveis 
+	<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<span id='visible_order2'>0</span>
+		<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<img src="resources/order3.png" alt="order3" />	visíveis  
+	<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<span id='visible_order3'>0</span>
+		<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<img src="resources/order4.png" alt="order4" /> visíveis 
+	<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<span id='visible_order4'>0</span>
+
+	<br />
+	<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		Mais Alto: 
+	<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<span id='mais_alto'>0</span>
+	<br />
+	<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		Mais Baixo:
+	<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<span id='mais_baixo'>0</span>
+	<br />
+</div>
+
+<hr>
+
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<input type="button" id="validarVgs" value="Validar VG's" onclick="checkRestrictions()">
+</DIV>
+
+
+
+
+
+<div id="mapid" style="position: fixed; top: 0px; left: 200px; width: 100%; height: 100%;"></div>
+</BODY>
+
+</HTML>
